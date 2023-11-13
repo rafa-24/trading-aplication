@@ -11,10 +11,10 @@ import { secretKey } from './keys';
     JwtModule.register({
       global: true,
       secret: secretKey,
-      signOptions: { expiresIn: '600s' },
+      signOptions: { expiresIn: '3600s' },
     }),
   ],
   controllers: [AuthController],
   providers: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule {} 

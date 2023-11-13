@@ -13,23 +13,32 @@ export class AuthService {
 
   async signIn(username: string, pass: string) {
     const user = await this.userService.findOne(username);
-    if(user) {
-      const equal = await isEqual(pass,user.contraseña);
-      if(equal) {
-        const { contraseña, nombre, pais, correo, telefono, mercado_financiero, tipo_de_trader, ...payload } = user;
+    if (user) {
+      const equal = await isEqual(pass, user.contraseña);
+      if (equal) {
+        const {
+          contraseña,
+          nombre,
+          pais,
+          correo,
+          telefono,
+          mercado_financiero,
+          tipo_de_trader,
+          ...payload
+        } = user;
         return {
           error: false,
-          accessToken: await this.jwtService.signAsync(payload)
+          accessToken: await this.jwtService.signAsync(payload),
         } as SignInResponse;
       }
       return {
         error: true,
-        message: 'Credenciales incorrectas'
-      } as SignInResponse;      
+        message: 'Credenciales incorrectas',
+      } as SignInResponse;
     }
     return {
       error: true,
-      message: 'Este usuario no existe'        
-   } as SignInResponse;    
+      message: 'Este usuario no existe',
+    } as SignInResponse;
   }
 }

@@ -1,32 +1,31 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { TypeTrader } from '../enum/typeTader';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: false })
   nombre: string;
 
-  @Column()
+  @Column({ nullable: false })
   pais: string;
 
-  @Column()
+  @Column({ nullable: false })
   correo: string;
 
-  @Column()
+  @Column({ nullable: false })
   telefono: string;
 
-  @Column()
+  @Column({ nullable: false })
   mercado_financiero: string;
 
-  @Column()
-  tipo_de_trader: TypeTrader;
+  @Column({ nullable: false })
+  tipo_de_trader: string;
 
-  @Column()
+  @Column({ nullable: false })
   nombre_usuario: string;
 
-  @Column()
+  @Column({ nullable: false })
   contraseña: string;
 }
