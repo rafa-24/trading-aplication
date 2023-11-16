@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity({name:'user'})
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -28,4 +28,12 @@ export class User {
 
   @Column({ nullable: false })
   contraseña: string;
+
+  @Column({ type: 'longblob', nullable: true})
+  foto_perfil: Buffer;
+
+  @Column({ type: 'varchar', nullable: true})
+  descripcion_usuario: string;
 }
+
+    

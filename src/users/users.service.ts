@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
@@ -21,10 +21,10 @@ export class UsersService {
         ...dataUser,
         contraseña: await hash(dataUser.contraseña),
       });
-      await this.userRepository.save(newUser);  
+      await this.userRepository.save(newUser);
 
       return {
-        error: false, 
+        error: false,
         message: 'Se ha creado usuario satisfactoriamente',
       };
     } catch (error) {
@@ -35,24 +35,64 @@ export class UsersService {
     }
   }
 
-  // ver si este usuario esta en la base de datos
+  // ver si este usuario existe en la base de datos
   async findOne(username: string): Promise<UserRegisterResponse> {
     const user = await this.userRepository.findOneBy({
       nombre_usuario: username,
-    }); 
+    });
     return user as UserRegisterResponse;
   }
 
-  // Saludar usuario -> modificar la consulta para buscar el usuario por id
-  async searchUser (name: string) {
+  async greetUser(name: string): Promise<string> {
     const user = await this.userRepository.findOneBy({ nombre_usuario: name });
-    return user;    
+    return `Hola ${user.nombre}`;
   }
 
-  async greetUser (name: string): Promise<string> {
-    const user = await this.userRepository.findOneBy({ nombre_usuario: name });
-    return `Hola ${user.nombre}`;    
+  async uploadPhoto(id: number, image: Buffer): Promise<RegisterInterface> {
+    try {
+      // buscar usuario por id
+      const user = await this.userRepository.findOneBy({ id });
+      if (!user)
+        throw new HttpException('unathorized', HttpStatus.UNAUTHORIZED);
+      // actualizar la foto o guardarla
+      const savePhoto = await this.userRepository.update(user.id, {
+        foto_perfil: image,
+      });
+      if (savePhoto.affected) {
+        return {
+          error: false,
+          message: 'Foto de perfil actualizada satisfactoriamente',
+        };
+      }
+      return {
+        error: true,
+        message: 'Error al subir Foto',
+      };
+    } catch (error) {
+      console.error(error);
+      return error;
+    }
   }
 
+  async addDescription(id: number, description: string): Promise<any> {   
+    try {
+      const user = await this.userRepository.findOneBy({id});
+      if (!user) throw new HttpException('unathorized', HttpStatus.UNAUTHORIZED);
 
+      const response = await this.userRepository.update(user.id, {descripcion_usuario: description});
+      if (response.affected) {
+        return {
+          error: false,
+          message: 'Se agrego descripcion de tu perfil',
+        };
+      }
+      return {
+        error: true,
+        message: 'Error al agregar descripcion de perfil',
+      };
+    } catch (error) {
+      console.error('error en el catch',error);
+      return error;
+    }
+  }
 }

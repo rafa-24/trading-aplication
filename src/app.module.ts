@@ -17,7 +17,7 @@ import { User } from "./users/entity/user.entity";
       password: 'Rafael01242000',
       database: 'trading-app',
       entities: [User],
-      synchronize: true,
+      synchronize: true
     }),
     AuthModule,
     UsersModule,
