@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
@@ -6,6 +6,7 @@ import { CreateUserDto } from './dto/newUser.dto';
 import { hash } from 'src/helpers/hash';
 import { RegisterInterface } from './interface/register.interface';
 import { UserRegisterResponse } from './interface/response/userResponse.interface';
+import { UserProfileResponse } from './interface/response/userDataprofile.interface';
 
 @Injectable()
 export class UsersService {
@@ -74,12 +75,41 @@ export class UsersService {
     }
   }
 
-  async addDescription(id: number, description: string): Promise<any> {   
+  async getUserAvatar(id: number): Promise<Buffer | string> {
     try {
-      const user = await this.userRepository.findOneBy({id});
-      if (!user) throw new HttpException('unathorized', HttpStatus.UNAUTHORIZED);
+      const user = await this.userRepository.findOne({ where: { id } }); // refactorizar este codigo esta duplicado
+      const userAvatar = user.foto_perfil;
+      if(userAvatar)  return userAvatar;
+      return 'Este usuario no tiene foto de perfil'
+    } catch (error) {
+      console.error(error)
+      return error;
+    }
+  }
 
-      const response = await this.userRepository.update(user.id, {descripcion_usuario: description});
+  async userProfileData(id: number): Promise<UserProfileResponse> {
+    try {
+      const user = await this.userRepository.findOne({ where: {id}});
+      if(!user) throw new UnauthorizedException('Usuario Invalido');
+      return {
+        name: user.nombre,
+        country: user.pais
+      }      
+    } catch (error) {
+      console.error(error);
+      return error;      
+    }
+  }
+
+  async addDescription(id: number, description: string): Promise<any> {
+    try {
+      const user = await this.userRepository.findOneBy({ id });
+      if (!user)
+        throw new HttpException('unathorized', HttpStatus.UNAUTHORIZED);
+
+      const response = await this.userRepository.update(user.id, {
+        descripcion_usuario: description,
+      });
       if (response.affected) {
         return {
           error: false,
@@ -91,7 +121,7 @@ export class UsersService {
         message: 'Error al agregar descripcion de perfil',
       };
     } catch (error) {
-      console.error('error en el catch',error);
+      console.error('error en el catch', error);
       return error;
     }
   }

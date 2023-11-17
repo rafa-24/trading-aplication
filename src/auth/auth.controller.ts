@@ -68,4 +68,16 @@ export class AuthController {
     const {description} = body;
     return await this.userService.addDescription(id, description);
   }
+
+  @Get('avatar')
+  async avatarUser(@Req() req: Request) {
+    return await this.userService.getUserAvatar(req.id);
+  }
+
+  @Get('user-profile')
+  async userProfileData(@Req() req: Request) {
+    return await this.userService.userProfileData(req.id);
+  }
+
+
 }
