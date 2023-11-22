@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from "typeorm";
 import { User } from "./users/entity/user.entity";
+import { EmotionalLog } from './entity/emotionalLog.entity';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { User } from "./users/entity/user.entity";
       username: 'root',
       password: 'Rafael01242000',
       database: 'trading-app',
-      entities: [User],
+      entities: [User, EmotionalLog],
       synchronize: true
     }),
     AuthModule,

@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { EmotionalLog } from 'src/entity/emotionalLog.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity({name:'user'})
 export class User {
@@ -34,6 +35,10 @@ export class User {
 
   @Column({ type: 'varchar', nullable: true})
   descripcion_usuario: string;
+
+  // Relacion uno a muchos
+  @OneToMany(() => EmotionalLog, emotionalLog => emotionalLog.user)
+  emotionalLog: EmotionalLog[];
 }
 
     
