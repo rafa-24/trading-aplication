@@ -29,8 +29,8 @@ export class User {
   @Column({ nullable: false })
   contraseña: string;
 
-  @Column({ type: 'longblob', nullable: true})
-  foto_perfil: Buffer;
+  @Column({ type: 'text', nullable: true})
+  foto_perfil: string;
 
   @Column({ type: 'varchar', nullable: true})
   descripcion_usuario: string;

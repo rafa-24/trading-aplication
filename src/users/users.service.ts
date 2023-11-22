@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
@@ -44,12 +49,19 @@ export class UsersService {
     return user as UserRegisterResponse;
   }
 
-  async greetUser(name: string): Promise<string> {
-    const user = await this.userRepository.findOneBy({ nombre_usuario: name });
-    return `Hola ${user.nombre}`;
+  async greetUser(name: string): Promise<string | boolean> {
+    try {
+      const user = await this.userRepository.findOneBy({
+        nombre_usuario: name,
+      });
+      if (user) return `Hola ${user.nombre}`;
+      return false;
+    } catch (error) {
+      return error;
+    }
   }
 
-  async uploadPhoto(id: number, image: Buffer): Promise<RegisterInterface> {
+  async uploadPhoto(id: number, image: string): Promise<RegisterInterface> {
     try {
       // buscar usuario por id
       const user = await this.userRepository.findOneBy({ id });
@@ -75,29 +87,27 @@ export class UsersService {
     }
   }
 
-  async getUserAvatar(id: number): Promise<Buffer | string> {
+  async getUserAvatar(id: number): Promise<any | string> {
     try {
       const user = await this.userRepository.findOne({ where: { id } }); // refactorizar este codigo esta duplicado
       const userAvatar = user.foto_perfil;
-      if(userAvatar)  return userAvatar;
-      return 'Este usuario no tiene foto de perfil'
+      if (userAvatar) return userAvatar;
+      return 'Este usuario no tiene foto de perfil';
     } catch (error) {
-      console.error(error)
       return error;
     }
   }
 
   async userProfileData(id: number): Promise<UserProfileResponse> {
     try {
-      const user = await this.userRepository.findOne({ where: {id}});
-      if(!user) throw new UnauthorizedException('Usuario Invalido');
+      const user = await this.userRepository.findOne({ where: { id } });
+      if (!user) throw new UnauthorizedException('Usuario Invalido');
       return {
         name: user.nombre,
-        country: user.pais
-      }      
+        country: user.pais,
+      };
     } catch (error) {
-      console.error(error);
-      return error;      
+      return error;
     }
   }
 

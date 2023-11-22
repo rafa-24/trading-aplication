@@ -8,7 +8,7 @@ import {
   UseGuards,
   Req,
   UploadedFile,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserDto } from 'src/users/dto/user.dto';
@@ -20,6 +20,7 @@ import { PublicAccess } from './decorators/public.decorator';
 import { AuthGuard } from './guards/auth.guard';
 import { Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { getUrlImage, supabase } from 'src/supabase';
 
 class DescriptionDto {
   description: string;
@@ -47,25 +48,34 @@ export class AuthController {
     const { username, password } = userData;
     return await this.authService.signIn(username, password);
   }
- 
-  @Get()
-  async greetUser(@Req() req: Request) {
-    return await this.userService.greetUser(req.nombre_usuario);
-  }
 
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file: Express.Multer.File, @Req() req: Request) {
-    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
-      throw new Error('Formato de archivo invalido');
+  async uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Req() req: Request,
+  ) {
+    try {
+      const { data, error } = await supabase.storage
+        .from('avatars')
+        .upload(`folder_name/${file.originalname}`, file.buffer, {
+          contentType: file.mimetype,
+        });
+
+      if (error) throw error;
+      const path = data.path; // obtener url de la foto
+      const urlImage = await getUrlImage(path);
+      return await this.userService.uploadPhoto(req.id, urlImage);
+    } catch (error) {
+      console.error('Error al subir imagen', error);
+      return error;
     }
-    return await this.userService.uploadPhoto(req.id, file.buffer);
   }
 
   @Post('description')
   async addDescripcion(@Body() body: DescriptionDto, @Req() req: Request) {
     const id = req.id;
-    const {description} = body;
+    const { description } = body;
     return await this.userService.addDescription(id, description);
   }
 
@@ -79,5 +89,8 @@ export class AuthController {
     return await this.userService.userProfileData(req.id);
   }
 
-
+  @Get('')
+  async greetUser(@Req() req: Request) {
+    return await this.userService.greetUser(req.nombre_usuario);
+  }
 }

@@ -16,6 +16,7 @@ export class AuthService {
     if (user) {
       const equal = await isEqual(pass, user.contraseña);
       if (equal) {
+        /*
         const {
           contraseña,
           nombre,
@@ -26,6 +27,13 @@ export class AuthService {
           tipo_de_trader,
           ...payload
         } = user;
+        */
+        
+       const payload = {
+        id: user.id,
+        nombre_usuario: user.nombre_usuario
+
+       }
         return {
           error: false,
           accessToken: await this.jwtService.signAsync(payload),
