@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { UsersService } from '../../users/users.service';
 import { SignInResponse } from 'src/users/interface/user.interface';
 import { JwtService } from '@nestjs/jwt';
 import { isEqual } from 'src/helpers/hash';

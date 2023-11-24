@@ -1,7 +1,7 @@
 import { EmotionalLog } from 'src/entity/emotionalLog.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
-@Entity({name:'user'})
+@Entity({ name: 'user' })
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -30,15 +30,13 @@ export class User {
   @Column({ nullable: false })
   contraseña: string;
 
-  @Column({ type: 'text', nullable: true})
+  @Column({ type: 'text', nullable: true })
   foto_perfil: string;
 
-  @Column({ type: 'varchar', nullable: true})
+  @Column({ type: 'varchar', nullable: true })
   descripcion_usuario: string;
 
   // Relacion uno a muchos
-  @OneToMany(() => EmotionalLog, emotionalLog => emotionalLog.user)
+  @OneToMany(() => EmotionalLog, (emotionalLog) => emotionalLog.user)
   emotionalLog: EmotionalLog[];
 }
-
-    

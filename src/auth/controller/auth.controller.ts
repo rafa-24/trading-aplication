@@ -10,14 +10,14 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { AuthService } from '../service/auth.service';
 import { UserDto } from 'src/users/dto/user.dto';
 import { UsersService } from 'src/users/users.service';
 import { CreateUserDto } from 'src/users/dto/newUser.dto';
 import { RegisterInterface } from 'src/users/interface/register.interface';
 import { SignInResponse } from 'src/users/interface/user.interface';
-import { PublicAccess } from './decorators/public.decorator';
-import { AuthGuard } from './guards/auth.guard';
+import { PublicAccess } from '../decorators/public.decorator';
+import { AuthGuard } from '../guards/auth.guard';
 import { Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { getUrlImage, supabase } from 'src/supabase';

@@ -4,9 +4,8 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DataSource } from "typeorm";
-import { User } from "./users/entity/user.entity";
-import { EmotionalLog } from './entity/emotionalLog.entity';
+import { DataSource } from 'typeorm';
+import { FeelingLogModule } from './feeling-log/feeling-log.module';
 
 @Module({
   imports: [
@@ -17,11 +16,12 @@ import { EmotionalLog } from './entity/emotionalLog.entity';
       username: 'root',
       password: 'Rafael01242000',
       database: 'trading-app',
-      entities: [User, EmotionalLog],
-      synchronize: true
+      entities: ['dist/**/*.entity{.ts,.js}'],
+      synchronize: true,
     }),
     AuthModule,
     UsersModule,
+    FeelingLogModule,
   ],
   controllers: [AppController],
   providers: [AppService],

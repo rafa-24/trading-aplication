@@ -1,7 +1,7 @@
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from 'src/users/entity/user.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
-@Entity({ name: 'emotionalLog' })
+@Entity({name: 'emotionallog'})
 export class EmotionalLog {
   @PrimaryGeneratedColumn()
   id: number;
@@ -22,6 +22,7 @@ export class EmotionalLog {
   contenido: string;
 
   // relacion muchos a uno
-  @ManyToOne(() => User, user => user.emotionalLog)
+  @ManyToOne(() => User, (user) => user.emotionalLog)
+  @JoinColumn({ name: 'user_id' }) 
   user: User;
 }
