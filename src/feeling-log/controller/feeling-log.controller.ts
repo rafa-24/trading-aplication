@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { FeelingLogService } from '../service/feeling-log.service';
 import { CreateFeelingLogDto } from '../dto/create-feeling-log.dto';
 import { UpdateFeelingLogDto } from '../dto/update-feeling-log.dto';
@@ -9,25 +19,31 @@ import { Request } from 'express';
 @UseGuards(AuthGuard)
 export class FeelingLogController {
   constructor(private readonly feelingLogService: FeelingLogService) {}
-  
-  
+
   @Post()
-  async create(@Body() createFeelingLogDto: CreateFeelingLogDto, @Req() req: Request) {
+  async create(
+    @Body() createFeelingLogDto: CreateFeelingLogDto,
+    @Req() req: Request,
+  ) {
     return await this.feelingLogService.create(createFeelingLogDto, req.id);
   }
-  
+
   @Get()
   async findAll(@Req() req: Request) {
     return await this.feelingLogService.findAll(req.id);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.feelingLogService.findOne(+id);
+  async findOne(@Param('id') id: string, @Req() req: Request) {
+    const paramId = parseInt(id);
+    return await this.feelingLogService.findOne(req.id, paramId);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFeelingLogDto: UpdateFeelingLogDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateFeelingLogDto: UpdateFeelingLogDto,
+  ) {
     return this.feelingLogService.update(+id, updateFeelingLogDto);
   }
 

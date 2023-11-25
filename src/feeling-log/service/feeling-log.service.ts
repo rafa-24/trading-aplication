@@ -68,11 +68,25 @@ export class FeelingLogService {
       return [];
     } catch (error) {
       console.error('error', error);
+      return error;
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} feelingLog`;
+  async findOne(userId: number, id: number) {
+    try {
+      const user = await searchUser(this.userRepo, userId);
+      if (!user) throw new UnauthorizedException('Usuario invalido');
+
+      const userLog = await this.entityManager.find(EmotionalLog, {
+        where: { user, id },
+      });
+
+      if (userLog) return userLog;
+      return [];
+    } catch (error) {
+      console.error('error', error);
+      return error;
+    }
   }
 
   update(id: number, updateFeelingLogDto: UpdateFeelingLogDto) {
