@@ -3,7 +3,6 @@ import { FeelingLogService } from '../service/feeling-log.service';
 import { CreateFeelingLogDto } from '../dto/create-feeling-log.dto';
 import { UpdateFeelingLogDto } from '../dto/update-feeling-log.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { PublicAccess } from 'src/auth/decorators/public.decorator';
 import { Request } from 'express';
 
 @Controller('feeling-log')
@@ -17,10 +16,9 @@ export class FeelingLogController {
     return await this.feelingLogService.create(createFeelingLogDto, req.id);
   }
   
-  @PublicAccess()
   @Get()
-  findAll() {
-    return this.feelingLogService.findAll();
+  async findAll(@Req() req: Request) {
+    return await this.feelingLogService.findAll(req.id);
   }
 
   @Get(':id')

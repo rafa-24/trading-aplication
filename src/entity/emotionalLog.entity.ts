@@ -6,7 +6,7 @@ export class EmotionalLog {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({nullable: true})
   fecha: Date;
 
   @Column({ type: 'varchar', nullable: false })
