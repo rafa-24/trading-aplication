@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
 import { UserDto } from 'src/users/dto/user.dto';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/users/service/users.service';
 import { CreateUserDto } from 'src/users/dto/newUser.dto';
 import { RegisterInterface } from 'src/users/interface/register.interface';
 import { SignInResponse } from 'src/users/interface/user.interface';

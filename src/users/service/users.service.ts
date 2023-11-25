@@ -5,13 +5,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entity/user.entity';
+import { User } from '../../entity/user.entity';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/newUser.dto';
+import { CreateUserDto } from '../dto/newUser.dto';
 import { hash } from 'src/helpers/hash';
-import { RegisterInterface } from './interface/register.interface';
-import { UserRegisterResponse } from './interface/response/userResponse.interface';
-import { UserProfileResponse } from './interface/response/userDataprofile.interface';
+import { RegisterInterface } from '../interface/register.interface';
+import { UserRegisterResponse } from '../interface/response/userResponse.interface';
+import { UserProfileResponse } from '../interface/response/userDataprofile.interface';
 
 @Injectable()
 export class UsersService {

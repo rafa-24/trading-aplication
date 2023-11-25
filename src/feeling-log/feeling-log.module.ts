@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
-import { FeelingLogService } from './feeling-log.service';
-import { FeelingLogController } from './feeling-log.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { EmotionalLog } from 'src/entity/emotionalLog.entity';
+import { FeelingLogService } from './service/feeling-log.service';
+import { FeelingLogController } from './controller/feeling-log.controller';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([EmotionalLog])],
+  imports: [UsersModule],
   controllers: [FeelingLogController],
   providers: [FeelingLogService],
 })

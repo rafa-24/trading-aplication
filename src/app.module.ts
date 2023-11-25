@@ -27,5 +27,5 @@ import { FeelingLogModule } from './feeling-log/feeling-log.module';
   providers: [AppService],
 })
 export class AppModule {
-  constructor(private dataSource: DataSource) {}
+  //constructor(private dataSource: DataSource) {}
 }

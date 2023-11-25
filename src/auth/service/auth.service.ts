@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '../../users/users.service';
+import { UsersService } from '../../users/service/users.service';
 import { SignInResponse } from 'src/users/interface/user.interface';
 import { JwtService } from '@nestjs/jwt';
 import { isEqual } from 'src/helpers/hash';
@@ -16,24 +16,10 @@ export class AuthService {
     if (user) {
       const equal = await isEqual(pass, user.contraseña);
       if (equal) {
-        /*
-        const {
-          contraseña,
-          nombre,
-          pais,
-          correo,
-          telefono,
-          mercado_financiero,
-          tipo_de_trader,
-          ...payload
-        } = user;
-        */
-        
-       const payload = {
-        id: user.id,
-        nombre_usuario: user.nombre_usuario
-
-       }
+        const payload = {
+          id: user.id,
+          nombre_usuario: user.nombre_usuario,
+        };
         return {
           error: false,
           accessToken: await this.jwtService.signAsync(payload),

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FeelingLogController } from './feeling-log.controller';
-import { FeelingLogService } from './feeling-log.service';
+import { FeelingLogController } from '../controller/feeling-log.controller';
+import { FeelingLogService } from '../service/feeling-log.service';
 
 describe('FeelingLogController', () => {
   let controller: FeelingLogController;

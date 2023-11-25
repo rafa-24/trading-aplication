@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/users/service/users.service';
 import { Request } from 'express';
 import { useToken } from 'src/helpers/jwt';
 import { ValidateToken } from '../interface/response/jwtInterface';
