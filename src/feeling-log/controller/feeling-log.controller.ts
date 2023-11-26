@@ -50,7 +50,8 @@ export class FeelingLogController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.feelingLogService.remove(+id);
+  async remove(@Param('id') id: string,@Req() req: Request ) {
+    const paramId = parseInt(id);
+    return await this.feelingLogService.remove(req.id, paramId)
   }
 }

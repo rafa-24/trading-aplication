@@ -50,7 +50,6 @@ export class FeelingLogService {
         message: 'Error al crear Bitacora emocional',
       };
     } catch (error) {
-      console.error('Error al crear bitacora emocional', error);
       return error;
     }
   }
@@ -67,7 +66,6 @@ export class FeelingLogService {
       if (userLogs.length) return userLogs;
       return [];
     } catch (error) {
-      console.error('error', error);
       return error;
     }
   }
@@ -84,7 +82,6 @@ export class FeelingLogService {
       if (userLog) return userLog;
       return [];
     } catch (error) {
-      console.error('error', error);
       return error;
     }
   }
@@ -93,7 +90,7 @@ export class FeelingLogService {
     userId: number,
     id: number,
     updateFeelingLogDto: UpdateFeelingLogDto,
-  ) {
+  ): Promise <CreateInterfaceResponse | string> {
     try {
       const user = await searchUser(this.userRepo, userId);
       if (!user) throw new UnauthorizedException('Usuario invalido');
@@ -104,26 +101,54 @@ export class FeelingLogService {
 
       if (userLog) {
         // actualizar
-        const logUpdate = await this.entityManager.update(EmotionalLog, userLog[0].id, updateFeelingLogDto);
-        if(logUpdate.affected) {
+        const logUpdate = await this.entityManager.update(
+          EmotionalLog,
+          userLog[0].id,
+          updateFeelingLogDto,
+        );
+        if (logUpdate.affected) {
           return {
             error: false,
-            message: 'Se ha actualizado bitacora de usuario'
+            message: 'Se ha actualizado bitacora de usuario',
           };
-        } return {
+        }
+        return {
           error: true,
-          message: "Error al actualizar la bitacora emocional"
+          message: 'Error al actualizar la bitacora emocional',
         };
       }
       return 'Este usuario no tiene bitacoras que actualizar';
-      // redireccionar a que cree una
     } catch (error) {
-      console.error('Error en la peticion', error);
       return error;
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} feelingLog`;
+  async remove(userId: number, id: number): Promise <CreateInterfaceResponse | string> {
+    try {
+      const user = await searchUser(this.userRepo, userId);
+      if (!user) throw new UnauthorizedException('Usuario invalido');
+
+      const userLog = await this.entityManager.find(EmotionalLog, {
+        where: { user, id },
+      });
+      if (userLog) {
+        const deletedLog = await this.entityManager.delete(
+          EmotionalLog,
+          userLog,
+        );
+        if (deletedLog.affected == 1)
+          return {
+            error: false,
+            message:
+              'Se ha eliminado esta bitacora emocional satisfactoriamente',
+          };
+        return {
+          error: true,
+          message: 'Error al eliminar la bitacora',
+        };
+      }
+    } catch (error) {
+      return error;
+    }
   }
 }
