@@ -1,4 +1,6 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateFeelingLogDto } from './create-feeling-log.dto';
-
-export class UpdateFeelingLogDto extends PartialType(CreateFeelingLogDto) {}
+export class UpdateFeelingLogDto {
+  estado_emocional: string;
+  antes_tradear: boolean;
+  despues_tradear: boolean;
+  contenido: string;
+}

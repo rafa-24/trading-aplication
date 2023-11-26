@@ -72,7 +72,7 @@ export class FeelingLogService {
     }
   }
 
-  async findOne(userId: number, id: number) {
+  async findOne(userId: number, id: number): Promise<UserEmotionalLog | any> {
     try {
       const user = await searchUser(this.userRepo, userId);
       if (!user) throw new UnauthorizedException('Usuario invalido');
@@ -89,8 +89,38 @@ export class FeelingLogService {
     }
   }
 
-  update(id: number, updateFeelingLogDto: UpdateFeelingLogDto) {
-    return `This action updates a #${id} feelingLog`;
+  async update(
+    userId: number,
+    id: number,
+    updateFeelingLogDto: UpdateFeelingLogDto,
+  ) {
+    try {
+      const user = await searchUser(this.userRepo, userId);
+      if (!user) throw new UnauthorizedException('Usuario invalido');
+
+      const userLog = await this.entityManager.find(EmotionalLog, {
+        where: { user, id },
+      });
+
+      if (userLog) {
+        // actualizar
+        const logUpdate = await this.entityManager.update(EmotionalLog, userLog[0].id, updateFeelingLogDto);
+        if(logUpdate.affected) {
+          return {
+            error: false,
+            message: 'Se ha actualizado bitacora de usuario'
+          };
+        } return {
+          error: true,
+          message: "Error al actualizar la bitacora emocional"
+        };
+      }
+      return 'Este usuario no tiene bitacoras que actualizar';
+      // redireccionar a que cree una
+    } catch (error) {
+      console.error('Error en la peticion', error);
+      return error;
+    }
   }
 
   remove(id: number) {

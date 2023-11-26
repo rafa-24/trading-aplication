@@ -40,11 +40,13 @@ export class FeelingLogController {
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateFeelingLogDto: UpdateFeelingLogDto,
+    @Req() req: Request
   ) {
-    return this.feelingLogService.update(+id, updateFeelingLogDto);
+    const paramId = parseInt(id);
+    return await this.feelingLogService.update(req.id, paramId, updateFeelingLogDto);   
   }
 
   @Delete(':id')
